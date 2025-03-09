@@ -5,7 +5,8 @@ class Poll < ApplicationRecord
   accepts_nested_attributes_for :emojis
 
   validates :owner_id, presence: true
-  validates :votes_per_participant, presence: true, numericality: { only_integer: true }
+  validates :votes_per_participant, presence: true,
+                                    numericality: { only_integer: true, greater_than: 0 }
 end
 
 # == Schema Information

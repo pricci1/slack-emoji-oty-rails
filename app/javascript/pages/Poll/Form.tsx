@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { EmojiList } from "@/components/EmojiList";
 import { SubmitButton } from "@/components/SubmitButton";
+import { upperFirst } from "es-toolkit/string";
 
 // Temporary fix for InertiaFormProps not being exported from @inertiajs/react
 type InertiaFormProps<TForm extends Record<string, any>> = ReturnType<typeof useForm<TForm>>;
@@ -87,6 +88,7 @@ export default function Form({ poll, onSubmit }: FormProps) {
             emojisCount={data.emojis.length}
             onNext={() => setStep(2)}
             originalEmojis={originalEmojis}
+            errors={errors}
           />
         ) : (
           <StepTwo
@@ -112,6 +114,7 @@ function StepOne({
   emojisCount,
   onNext,
   originalEmojis,
+  errors,
 }: {
   sinceFilter: string;
   setSinceFilter: (value: string) => void;
@@ -122,6 +125,7 @@ function StepOne({
   emojisCount: number;
   onNext: () => void;
   originalEmojis: EmojiWithoutId[];
+  errors: Record<string, string[]>;
 }) {
   const emojiOptions = originalEmojis.map((emoji) => ({
     value: emoji.name,
@@ -167,6 +171,11 @@ function StepOne({
           onChange={(e) => setVotesPerParticipant(e.target.value)}
           className="mt-1"
         />
+        {errors.votesPerParticipant?.map((error) => (
+          <p key={error} className="text-sm text-red-600">
+            {upperFirst(error)}
+          </p>
+        ))}
       </div>
 
       <div className="flex justify-between items-center mt-8">
