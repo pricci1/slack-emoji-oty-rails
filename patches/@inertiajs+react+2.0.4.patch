@@ -1,0 +1,13 @@
+diff --git a/node_modules/@inertiajs/react/types/useForm.d.ts b/node_modules/@inertiajs/react/types/useForm.d.ts
+index de427dc..7cee9a6 100644
+--- a/node_modules/@inertiajs/react/types/useForm.d.ts
++++ b/node_modules/@inertiajs/react/types/useForm.d.ts
+@@ -7,7 +7,7 @@ type FormOptions = Omit<VisitOptions, 'data'>;
+ export interface InertiaFormProps<TForm extends FormDataType> {
+     data: TForm;
+     isDirty: boolean;
+-    errors: Partial<Record<keyof TForm, string>>;
++    errors: Partial<Record<keyof TForm, string[]>>;
+     hasErrors: boolean;
+     processing: boolean;
+     progress: Progress | null;

@@ -8,7 +8,8 @@
     "vite-plugin-ruby": "^5.1.0"
   },
   "scripts": {
-    "check": "tsc -p tsconfig.app.json && tsc -p tsconfig.node.json"
+    "check": "tsc -p tsconfig.app.json && tsc -p tsconfig.node.json",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@inertiajs/react": "^2.0.4",
@@ -26,6 +27,8 @@
     "cmdk": "1.0.0",
     "es-toolkit": "^1.33.0",
     "lucide-react": "^0.479.0",
+    "patch-package": "^8.0.0",
+    "postinstall-postinstall": "^2.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^3.0.2",
