@@ -42,7 +42,7 @@ class PollsController < ApplicationController
     if @poll.save
       # redirect_to [, @poll], notice: "Poll was successfully created."
     else
-      redirect_to new_poll_url, inertia: { errors: @poll.errors }
+      redirect_to new_poll_url, inertia: { errors: serialize_poll_errors(@poll) }
     end
   end
 
@@ -51,14 +51,14 @@ class PollsController < ApplicationController
     if @poll.update(poll_params)
       # redirect_to [, @poll], notice: "Poll was successfully updated."
     else
-      redirect_to edit_poll_url(@poll), inertia: { errors: @poll.errors }
+      redirect_to edit_poll_url(@poll), inertia: { errors: serialize_poll_errors(@poll) }
     end
   end
 
   # DELETE /polls/1
   def destroy
     @poll.destroy!
-    redirect_to _polls_url, notice: "Poll was successfully destroyed."
+    redirect_to polls_url, notice: "Poll was successfully destroyed."
   end
 
   private
@@ -67,14 +67,20 @@ class PollsController < ApplicationController
       @poll = Poll.find(params[:id])
     end
 
-    # Only allow a list of trusted parameters through.
     def poll_params
-      params.fetch(:poll, {})
+      params.require(:poll).permit(:votes_per_participant)
+        .merge(owner_id: "1", team_id: "1", emojis_attributes: emojis_params[:emojis])
+    end
+
+    def emojis_params
+      params.require(:poll).permit(emojis: [ [ :name, :image ] ])
     end
 
     def serialize_poll(poll)
-      poll.as_json(only: [
-        :id
-      ])
+      poll.as_json.transform_keys { it.camelize(:lower) }
+    end
+
+    def serialize_poll_errors(poll)
+      poll.errors.as_json.transform_keys { it.to_s.camelize(:lower) }
     end
 end

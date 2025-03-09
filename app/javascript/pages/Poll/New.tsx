@@ -1,10 +1,11 @@
-import { Head, Link } from '@inertiajs/react'
-import Form from './Form'
-import { PollType } from './types'
-import { Button } from '@/components/ui/button'
+import { Head, Link } from "@inertiajs/react";
+import Form from "./Form";
+import { PollType } from "./types";
+import { Button } from "@/components/ui/button";
+import { snakeCaseKeysDeep } from "@/lib/snakeCaseKeysDeep";
 
 interface NewProps {
-  poll: PollType
+  poll: PollType;
 }
 
 export default function New({ poll }: NewProps) {
@@ -17,8 +18,8 @@ export default function New({ poll }: NewProps) {
       <Form
         poll={poll}
         onSubmit={(form) => {
-          form.transform((data) => ({ poll: data }))
-          form.post('/polls')
+          form.transform((data) => ({ poll: snakeCaseKeysDeep(data) }));
+          form.post("/polls");
         }}
         submitText="Create Poll"
       />
@@ -29,5 +30,5 @@ export default function New({ poll }: NewProps) {
         <Link href="/polls">Back to polls</Link>
       </Button>
     </>
-  )
+  );
 }

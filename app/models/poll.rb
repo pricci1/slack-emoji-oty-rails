@@ -2,6 +2,8 @@ class Poll < ApplicationRecord
   has_many :votes, dependent: :destroy
   has_many :emojis, dependent: :destroy
 
+  accepts_nested_attributes_for :emojis
+
   validates :owner_id, presence: true
   validates :votes_per_participant, presence: true, numericality: { only_integer: true }
 end

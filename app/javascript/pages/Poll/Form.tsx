@@ -39,16 +39,23 @@ const mockEmojis = [
   },
 ];
 
-export default function Form({ poll, onSubmit, submitText }: FormProps) {
-  const form = useForm<PollFormType>({});
+export default function Form({ poll, onSubmit }: FormProps) {
+  const originalEmojis = mockEmojis;
+  const form = useForm<PollFormType>({
+    votesPerParticipant: poll.votesPerParticipant ?? "1",
+    emojis: poll.emojis?.map(({ name, image }) => ({ name, image })) ?? [],
+  });
   const { data, setData, errors, processing } = form;
 
-  const originalEmojis = mockEmojis;
-  const [emojis, setEmojis] = useState<EmojiWithoutId[]>(originalEmojis);
+  const setEmojis = (emojis: EmojiWithoutId[]) => {
+    setData("emojis", emojis);
+  };
   const [sinceFilter, setSinceFilter] = useState("");
   const [untilFilter, setUntilFilter] = useState("");
   const [step, setStep] = useState(1);
-  const [votesPerParticipant, setVotesPerParticipant] = useState("1");
+  const setVotesPerParticipant = (value: string) => {
+    setData("votesPerParticipant", value);
+  };
 
   useEffect(() => {
     const sinceEmojiIndex = originalEmojis.findIndex((emoji) => emoji.name === sinceFilter);
@@ -75,18 +82,18 @@ export default function Form({ poll, onSubmit, submitText }: FormProps) {
             setSinceFilter={setSinceFilter}
             untilFilter={untilFilter}
             setUntilFilter={setUntilFilter}
-            votesPerParticipant={votesPerParticipant}
+            votesPerParticipant={data.votesPerParticipant}
             setVotesPerParticipant={setVotesPerParticipant}
-            emojisCount={emojis.length}
+            emojisCount={data.emojis.length}
             onNext={() => setStep(2)}
             originalEmojis={originalEmojis}
           />
         ) : (
           <StepTwo
             isSubmitting={processing}
-            emojis={emojis}
+            emojis={data.emojis}
             setEmojis={setEmojis}
-            votesPerParticipant={votesPerParticipant}
+            votesPerParticipant={data.votesPerParticipant}
             onBack={() => setStep(1)}
           />
         )}
